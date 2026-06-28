@@ -49,7 +49,7 @@ public class EjecutarJuego {
 
         Scanner leer = new Scanner(System.in);
 
-        System.out.print("Cuantos personajes participaran en el torneo?: ");
+        System.out.print("Cuantos personajes participaran en el torneo? ");
         int cantidad = leerEntero(leer);
 
         while (cantidad < 2) {
@@ -57,7 +57,7 @@ public class EjecutarJuego {
             cantidad = leerEntero(leer);
         }
 
-        List<Personaje> participantes = new ArrayList<Personaje>();
+        List<Personaje> participantes = new ArrayList<>();
 
         for (int i = 1; i <= cantidad; i++) {
             Personaje p = crearPersonaje(leer, i);
@@ -69,12 +69,6 @@ public class EjecutarJuego {
             System.out.println(p);
         }
 
-        // Estados alterados
-        System.out.println("\n===== ESTADOS ALTERADOS APLICADOS =====");
-        participantes.get(0).agregarEstado(new Envenenado(3, 5));
-        participantes.get(0).agregarEstado(new Congelado(1));
-        participantes.get(1).agregarEstado(new AumentoFuerza(2, 10));
-
         Combate.jugarTorneoTodosContraTodos(participantes);
 
         leer.close();
@@ -82,7 +76,7 @@ public class EjecutarJuego {
 
     private static Personaje crearPersonaje(Scanner leer, int numero) {
 
-        System.out.println("--- Personaje " + numero + " ---");
+        System.out.println("\n--- Personaje " + numero + " ---");
 
         System.out.print("Nombre: ");
         String nombre = leer.nextLine();
