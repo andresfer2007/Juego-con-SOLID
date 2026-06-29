@@ -1,4 +1,3 @@
-
 package ejecutarjuego;
 
 public class Guerrero extends Personaje {
@@ -11,29 +10,19 @@ public class Guerrero extends Personaje {
     }
 
     @Override
-    public String toString() {
-        return "\n--- GUERRERO ---"
-                + "\n" + super.toString()
-                + "\nFuerza: " + fuerza;
-    }
-
-    @Override
     public int atacar() {
-        return (fuerza * nivel) + getBonusAtaque(); // incluye bonus del arma
+        return fuerza * nivel;
     }
 
     @Override
     public int defender() {
-        return 5 + getBonusDefensa(); // incluye bonus de armadura
+        return 5;
     }
 
     @Override
-    public int usarHabilidadEspecial(){
-        if(energia>=30 && cooldown==0){
-            energia-=30;
-            cooldown=3;
-            return atacar()*3;
-        }
-        return atacar();
+    public String toString() {
+        return "\n--- GUERRERO ---"
+                + "\n" + super.toString()
+                + "\nFuerza: " + fuerza;
     }
 }
