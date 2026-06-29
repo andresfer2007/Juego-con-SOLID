@@ -57,12 +57,6 @@ public class Combate {
 
     public static Personaje batallar(Personaje p1, Personaje p2) {
 
-        p1.recuperarEnergia();
-        p2.recuperarEnergia();
-
-        p1.actualizarCooldown();
-        p2.actualizarCooldown();
-
         p1.restaurarVida();
         p2.restaurarVida();
 
@@ -75,6 +69,10 @@ public class Combate {
         while (p1.estaVivo() && p2.estaVivo() && turno < turnosMaximos) {
 
             // Turno del personaje 1
+            // Energia y cooldown se actualizan cada turno (antes solo pasaba una vez
+            // por combate, lo que dejaba las habilidades bloqueadas para siempre tras usarlas)
+            p1.recuperarEnergia();
+            p1.actualizarCooldown();
             p1.aplicarEstadosInicioTurno();
 
             if (!p1.estaVivo()) {
@@ -85,7 +83,9 @@ public class Combate {
 
                 int ataque1;
 
-                if (p1.getCooldown() == 0 && p1.getEnergia() >= 30) {
+                // DIP: Combate ya no conoce los umbrales internos de cada clase,
+                // solo le pregunta al personaje si puede usar su habilidad.
+                if (p1.puedeUsarHabilidad()) {
                     ataque1 = p1.usarHabilidadEspecial();
 
                     System.out.println(
@@ -122,6 +122,8 @@ public class Combate {
             }
 
             // Turno del personaje 2
+            p2.recuperarEnergia();
+            p2.actualizarCooldown();
             p2.aplicarEstadosInicioTurno();
 
             if (!p2.estaVivo()) {
@@ -132,7 +134,7 @@ public class Combate {
 
                 int ataque2;
 
-                if (p2.getCooldown() == 0 && p2.getEnergia() >= 30) {
+                if (p2.puedeUsarHabilidad()) {
                     ataque2 = p2.usarHabilidadEspecial();
 
                     System.out.println(
