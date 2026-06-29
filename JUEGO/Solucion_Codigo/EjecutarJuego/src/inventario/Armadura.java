@@ -1,4 +1,6 @@
-package ejecutarjuego;
+package inventario;
+
+import inventario.Objeto;
 
 public class Armadura extends Objeto {
 

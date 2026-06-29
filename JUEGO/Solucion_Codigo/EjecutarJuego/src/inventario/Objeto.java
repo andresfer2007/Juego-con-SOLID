@@ -1,4 +1,4 @@
-package ejecutarjuego;
+package inventario;
 
 public abstract class Objeto {
 

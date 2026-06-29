@@ -1,4 +1,5 @@
-package ejecutarjuego;
+package personajes;
+
 
 public class Guerrero extends Personaje {
 
@@ -21,7 +22,7 @@ public class Guerrero extends Personaje {
     @Override
     public int defender() {
         return 5 + getBonusDefensa();
-    } // LSP: implementa el contrato de Personaje 
+    } 
 
     @Override
     public boolean puedeUsarHabilidad() {

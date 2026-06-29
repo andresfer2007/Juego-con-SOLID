@@ -1,4 +1,5 @@
-package ejecutarjuego;
+package personajes;
+
 
 public class Arquero extends Personaje { // OCP: umbrales más bajos — el arquero es más ágil y rápido 
 

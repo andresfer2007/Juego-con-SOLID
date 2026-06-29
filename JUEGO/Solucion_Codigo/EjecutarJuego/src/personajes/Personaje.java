@@ -1,5 +1,8 @@
-package ejecutarjuego;
+package personajes;
 
+import inventario.Arma;
+import inventario.Armadura;
+import inventario.Objeto;
 import java.util.ArrayList;
 
 public abstract class Personaje {
@@ -12,8 +15,6 @@ public abstract class Personaje {
     protected int energia = 100;
     protected int energiaMaxima = 100;
     protected int cooldown = 0;
-
-   
 
     protected ArrayList<Objeto> inventario;
     protected Arma armaEquipada = null;
@@ -28,9 +29,10 @@ public abstract class Personaje {
 
         this.inventario = new ArrayList<>();
     }
-    
-     public abstract int usarHabilidadEspecial();
-     public abstract boolean puedeUsarHabilidad();
+
+    public abstract int usarHabilidadEspecial();
+
+    public abstract boolean puedeUsarHabilidad();
 
     public void sumarVictoria() {
         victorias++;
@@ -125,6 +127,29 @@ public abstract class Personaje {
 
     public int getNivel() {
         return nivel;
+    }
+
+    public int getEnergia() {
+        return energia;
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public void restaurarEnergia() {
+        this.energia = energiaMaxima;
+        this.cooldown = 0;
+    }
+
+    public void reducirCooldown() {
+        if (cooldown > 0) {
+            cooldown--;
+        }
+    }
+
+    public void regenerarEnergia(int cantidad) {
+        energia = Math.min(energia + cantidad, energiaMaxima);
     }
 
     @Override

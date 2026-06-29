@@ -1,4 +1,6 @@
-package ejecutarjuego;
+package efectos;
+
+import personajes.Personaje;
 
 public class Congelado extends EstadoAlterado {
 

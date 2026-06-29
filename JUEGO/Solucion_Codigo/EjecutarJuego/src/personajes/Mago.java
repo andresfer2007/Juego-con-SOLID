@@ -1,4 +1,4 @@
-package ejecutarjuego;
+package personajes;
 
 public class Mago extends Personaje { // OCP: umbrales más altos — el mago es más poderoso pero más lento 
 

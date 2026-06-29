@@ -1,4 +1,6 @@
-package ejecutarjuego;
+package efectos;
+
+import personajes.Personaje;
 
 public abstract class EstadoAlterado {
 
