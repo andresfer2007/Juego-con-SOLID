@@ -1,15 +1,15 @@
 package ejecutarjuego;
 
-public class Arquero extends Personaje {
+public class Arquero extends Personaje { // OCP: umbrales más bajos — el arquero es más ágil y rápido 
 
+    private static final int COSTO_ENERGIA_HABILIDAD = 20;
+    private static final int COOLDOWN_HABILIDAD = 2;
+    private static final int MULTIPLICADOR_HABILIDAD = 2;
     private int precision;
 
     public Arquero(String nombre, int vida, int nivel, int precision) {
         super(nombre, vida, nivel);
         this.precision = precision;
-    }
-    public int getPrecision(){
-        return precision;
     }
 
     @Override
@@ -23,23 +23,22 @@ public class Arquero extends Personaje {
     }
 
     @Override
-    public String toString() {
-        return "\n--- ARQUERO ---"
-                + "\n" + super.toString()
-                + "\nPrecision: " + precision;
+    public boolean puedeUsarHabilidad() {
+        return energia >= COSTO_ENERGIA_HABILIDAD && cooldown == 0;
     }
 
-
-
-    //cambios
     @Override
-    public int usarHabilidadEspecial(){
-        if(energia>=20 && cooldown==0){
-            energia-=20;
-            cooldown=2;
-            return (getPrecision()*nivel)+30;
+    public int usarHabilidadEspecial() {
+        if (puedeUsarHabilidad()) {
+            energia -= COSTO_ENERGIA_HABILIDAD;
+            cooldown = COOLDOWN_HABILIDAD;
+            return atacar() * MULTIPLICADOR_HABILIDAD;
         }
         return atacar();
     }
-}
 
+    @Override
+    public String toString() {
+        return "\n--- ARQUERO ---" + "\n" + super.toString() + "\nPrecision: " + precision;
+    }
+}
