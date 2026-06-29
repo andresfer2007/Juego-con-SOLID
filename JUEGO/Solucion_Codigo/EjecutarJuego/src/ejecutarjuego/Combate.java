@@ -184,6 +184,7 @@ public class Combate {
         } else if (!p2.estaVivo()) {
             ganador = p1;
         } else {
+            // Empate por limite de turnos: gana quien tenga mas vida.
             if (p1.getVida() >= p2.getVida()) {
                 ganador = p1;
             } else {

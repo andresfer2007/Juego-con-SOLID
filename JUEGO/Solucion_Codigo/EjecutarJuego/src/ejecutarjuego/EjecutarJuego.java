@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 public class EjecutarJuego {
 
-    // Plantillas predefinidas por tipo: {vida, nivel, stat_especial}
-    // Guerrero: fuerza | Mago: magia | Arquero: precision
     private static final int[][] STATS_GUERRERO = {
         {100, 1, 8},   // Guerrero Novato
         {130, 2, 12},  // Guerrero Veterano

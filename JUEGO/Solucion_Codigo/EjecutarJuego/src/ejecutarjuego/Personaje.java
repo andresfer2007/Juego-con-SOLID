@@ -9,16 +9,15 @@ public abstract class Personaje {
     protected int vidaMaxima;
     protected int nivel;
     protected int victorias;
-
-    protected int energia;
-    protected int cooldown;
+    protected int energia = 100;
+    protected int energiaMaxima = 100;
+    protected int cooldown = 0;
 
     // SRP: la gestion de estados alterados ya no vive aqui, se delega
     protected GestorEstados gestorEstados;
     protected ArrayList<Objeto> inventario;
     protected Arma armaEquipada = null;
     protected Armadura armaduraEquipada = null;
-
 
     public Personaje(String nombre, int vida, int nivel) {
         this.nombre = nombre;
@@ -28,10 +27,14 @@ public abstract class Personaje {
         this.victorias = 0;
 
         this.inventario = new ArrayList<>();
-        this.energia = 100;
-        this.cooldown = 0;
         this.gestorEstados = new GestorEstados();
     }
+
+    public abstract int usarHabilidadEspecial();
+
+    // DIP: cada subclase decide con su propio costo si puede usar la habilidad,
+    // Combate ya no necesita conocer los numeros internos de cada clase.
+    public abstract boolean puedeUsarHabilidad();
 
     public void sumarVictoria() {
         victorias++;
@@ -49,14 +52,8 @@ public abstract class Personaje {
 
     public abstract int defender();
 
-    public abstract int usarHabilidadEspecial();
-
-    // DIP: cada subclase decide con su propio costo si puede usar la habilidad,
-    // Combate ya no necesita conocer los numeros internos de cada clase.
-    public abstract boolean puedeUsarHabilidad();
-
     public void recibirDanio(int danio) {
-        vida = vida - danio;
+        vida -= danio;
 
         if (vida < 0) {
             vida = 0;
@@ -69,7 +66,7 @@ public abstract class Personaje {
 
     public void subirNivel() {
         nivel++;
-        vidaMaxima = vidaMaxima + 20;
+        vidaMaxima += 20;
         vida = vidaMaxima;
     }
 
@@ -141,8 +138,8 @@ public abstract class Personaje {
     public void recuperarEnergia() {
         energia = energia + 10;
 
-        if (energia > 100) {
-            energia = 100;
+        if (energia > energiaMaxima) {
+            energia = energiaMaxima;
         }
     }
 
@@ -198,6 +195,5 @@ public abstract class Personaje {
                 + "\nCooldown: " + cooldown
                 + "\nArma equipada: " + arma
                 + "\nArmadura equipada: " + armadura;
-
     }
 }
