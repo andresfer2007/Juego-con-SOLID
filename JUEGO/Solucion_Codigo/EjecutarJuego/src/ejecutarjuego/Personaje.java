@@ -13,8 +13,8 @@ public abstract class Personaje {
     protected int energiaMaxima = 100;
     protected int cooldown = 0;
 
-   
-
+    // SRP: la gestion de estados alterados ya no vive aqui, se delega
+    protected GestorEstados gestorEstados;
     protected ArrayList<Objeto> inventario;
     protected Arma armaEquipada = null;
     protected Armadura armaduraEquipada = null;
@@ -27,10 +27,14 @@ public abstract class Personaje {
         this.victorias = 0;
 
         this.inventario = new ArrayList<>();
+        this.gestorEstados = new GestorEstados();
     }
-    
-     public abstract int usarHabilidadEspecial();
-     public abstract boolean puedeUsarHabilidad();
+
+    public abstract int usarHabilidadEspecial();
+
+    // DIP: cada subclase decide con su propio costo si puede usar la habilidad,
+    // Combate ya no necesita conocer los numeros internos de cada clase.
+    public abstract boolean puedeUsarHabilidad();
 
     public void sumarVictoria() {
         victorias++;
@@ -123,6 +127,49 @@ public abstract class Personaje {
         return vida;
     }
 
+    public int getEnergia() {
+        return energia;
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public void recuperarEnergia() {
+        energia = energia + 10;
+
+        if (energia > energiaMaxima) {
+            energia = energiaMaxima;
+        }
+    }
+
+    public void actualizarCooldown() {
+        if (cooldown > 0) {
+            cooldown--;
+        }
+    }
+
+    // control de estados: delegado por completo a GestorEstados (SRP)
+    public void agregarEstado(EstadoAlterado estado) {
+        gestorEstados.agregarEstado(estado, nombre);
+    }
+
+    public void aplicarEstadosInicioTurno() {
+        gestorEstados.aplicarInicioTurno(this);
+    }
+
+    public boolean puedeAtacar() {
+        return gestorEstados.permiteAtacar();
+    }
+
+    public int obtenerAtaqueConEstados(int ataqueBase) {
+        return gestorEstados.modificarAtaque(ataqueBase);
+    }
+
+    public void actualizarEstadosAlterados() {
+        gestorEstados.actualizarEstados(nombre);
+    }
+
     public int getNivel() {
         return nivel;
     }
@@ -144,6 +191,8 @@ public abstract class Personaje {
         return "Nombre: " + nombre
                 + "\nVida: " + vida
                 + "\nNivel: " + nivel
+                + "\nEnergia: " + energia
+                + "\nCooldown: " + cooldown
                 + "\nArma equipada: " + arma
                 + "\nArmadura equipada: " + armadura;
     }

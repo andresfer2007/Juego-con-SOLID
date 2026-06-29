@@ -1,4 +1,5 @@
 package ejecutarjuego;
+
 import java.util.List;
 
 public class Combate {
@@ -67,35 +68,103 @@ public class Combate {
 
         while (p1.estaVivo() && p2.estaVivo() && turno < turnosMaximos) {
 
-            int danio1 = p1.atacar() - p2.defender();
+            // Turno del personaje 1
+            // Energia y cooldown se actualizan cada turno (antes solo pasaba una vez
+            // por combate, lo que dejaba las habilidades bloqueadas para siempre tras usarlas)
+            p1.recuperarEnergia();
+            p1.actualizarCooldown();
+            p1.aplicarEstadosInicioTurno();
 
-            if (danio1 < 0) {
-                danio1 = 0;
+            if (!p1.estaVivo()) {
+                break;
             }
 
-            p2.recibirDanio(danio1);
+            if (p1.puedeAtacar()) {
 
-            System.out.println(
-                    p1.getNombre() + " ataca y causa "
-                    + danio1 + " de danio."
-            );
+                int ataque1;
+
+                // DIP: Combate ya no conoce los umbrales internos de cada clase,
+                // solo le pregunta al personaje si puede usar su habilidad.
+                if (p1.puedeUsarHabilidad()) {
+                    ataque1 = p1.usarHabilidadEspecial();
+
+                    System.out.println(
+                            p1.getNombre() + " usa habilidad especial!"
+                    );
+                } else {
+                    ataque1 = p1.atacar();
+                }
+
+                ataque1 = p1.obtenerAtaqueConEstados(ataque1);
+
+                int danio1 = ataque1 - p2.defender();
+
+                if (danio1 < 0) {
+                    danio1 = 0;
+                }
+
+                p2.recibirDanio(danio1);
+
+                System.out.println(
+                        p1.getNombre() + " ataca y causa "
+                        + danio1 + " de danio."
+                );
+
+            } else {
+                System.out.println(p1.getNombre()
+                        + " no puede atacar por un estado alterado.");
+            }
+
+            p1.actualizarEstadosAlterados();
 
             if (!p2.estaVivo()) {
                 break;
             }
 
-            int danio2 = p2.atacar() - p1.defender();
+            // Turno del personaje 2
+            p2.recuperarEnergia();
+            p2.actualizarCooldown();
+            p2.aplicarEstadosInicioTurno();
 
-            if (danio2 < 0) {
-                danio2 = 0;
+            if (!p2.estaVivo()) {
+                break;
             }
 
-            p1.recibirDanio(danio2);
+            if (p2.puedeAtacar()) {
 
-            System.out.println(
-                    p2.getNombre() + " ataca y causa "
-                    + danio2 + " de danio."
-            );
+                int ataque2;
+
+                if (p2.puedeUsarHabilidad()) {
+                    ataque2 = p2.usarHabilidadEspecial();
+
+                    System.out.println(
+                            p2.getNombre() + " usa habilidad especial!"
+                    );
+                } else {
+                    ataque2 = p2.atacar();
+                }
+
+                ataque2 = p2.obtenerAtaqueConEstados(ataque2);
+
+                int danio2 = ataque2 - p1.defender();
+
+                if (danio2 < 0) {
+                    danio2 = 0;
+                }
+
+                p1.recibirDanio(danio2);
+
+                System.out.println(
+                        p2.getNombre() + " ataca y causa "
+                        + danio2 + " de danio."
+                );
+
+            } else {
+                System.out.println(p2.getNombre()
+                        + " no puede atacar por un estado alterado.");
+            }
+
+            p2.actualizarEstadosAlterados();
 
             System.out.println(
                     p1.getNombre() + " Vida: " + p1.getVida()
