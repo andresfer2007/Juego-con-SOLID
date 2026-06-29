@@ -15,14 +15,4 @@ public class Envenenado extends EstadoAlterado {
         System.out.println(personaje.getNombre() + " pierde "
                 + danioPorTurno + " de vida por veneno.");
     }
-
-    @Override
-    public int modificarAtaque(int ataqueBase) {
-        return ataqueBase;
-    }
-
-    @Override
-    public boolean permiteAtacar() {
-        return true;
-    }
 }
