@@ -13,11 +13,6 @@ public class Congelado extends EstadoAlterado {
     }
 
     @Override
-    public int modificarAtaque(int ataqueBase) {
-        return ataqueBase;
-    }
-
-    @Override
     public boolean permiteAtacar() {
         return false;
     }

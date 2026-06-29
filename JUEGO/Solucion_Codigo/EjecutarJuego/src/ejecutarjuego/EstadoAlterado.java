@@ -14,11 +14,17 @@ public abstract class EstadoAlterado {
         return nombre;
     }
 
-    public abstract void aplicarInicioTurno(Personaje personaje);
+    public void aplicarInicioTurno(Personaje personaje) {
+        // Por defecto no hace nada.
+    }
 
-    public abstract int modificarAtaque(int ataqueBase);
+    public int modificarAtaque(int ataqueBase) {
+        return ataqueBase;
+    }
 
-    public abstract boolean permiteAtacar();
+    public boolean permiteAtacar() {
+        return true;
+    }
 
     public void reducirDuracion() {
         turnos--;

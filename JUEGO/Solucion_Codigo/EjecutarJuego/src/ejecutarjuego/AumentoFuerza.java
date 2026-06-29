@@ -19,9 +19,4 @@ public class AumentoFuerza extends EstadoAlterado {
     public int modificarAtaque(int ataqueBase) {
         return ataqueBase + bonoAtaque;
     }
-
-    @Override
-    public boolean permiteAtacar() {
-        return true;
-    }
 }
