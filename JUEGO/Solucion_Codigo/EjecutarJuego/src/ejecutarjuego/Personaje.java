@@ -12,8 +12,9 @@ public abstract class Personaje {
 
     protected int energia;
     protected int cooldown;
-    // estados alterados del personaje
-    protected ArrayList<EstadoAlterado> estadosAlterados;
+
+    // SRP: la gestion de estados alterados ya no vive aqui, se delega
+    protected GestorEstados gestorEstados;
     protected ArrayList<Objeto> inventario;
     protected Arma armaEquipada = null;
     protected Armadura armaduraEquipada = null;
@@ -26,11 +27,10 @@ public abstract class Personaje {
         this.nivel = nivel;
         this.victorias = 0;
 
-	this.inventario = new ArrayList<>();
+        this.inventario = new ArrayList<>();
         this.energia = 100;
         this.cooldown = 0;
-        this.estadosAlterados = new ArrayList<EstadoAlterado>();
-
+        this.gestorEstados = new GestorEstados();
     }
 
     public void sumarVictoria() {
@@ -50,6 +50,10 @@ public abstract class Personaje {
     public abstract int defender();
 
     public abstract int usarHabilidadEspecial();
+
+    // DIP: cada subclase decide con su propio costo si puede usar la habilidad,
+    // Combate ya no necesita conocer los numeros internos de cada clase.
+    public abstract boolean puedeUsarHabilidad();
 
     public void recibirDanio(int danio) {
         vida = vida - danio;
@@ -148,58 +152,25 @@ public abstract class Personaje {
         }
     }
 
-    // control de estados
+    // control de estados: delegado por completo a GestorEstados (SRP)
     public void agregarEstado(EstadoAlterado estado) {
-        estadosAlterados.add(estado);
-        System.out.println(nombre + " recibe el estado: " + estado.getNombre());
+        gestorEstados.agregarEstado(estado, nombre);
     }
 
     public void aplicarEstadosInicioTurno() {
-        for (int i = 0; i < estadosAlterados.size(); i++) {
-            EstadoAlterado estado = estadosAlterados.get(i);
-            estado.aplicarInicioTurno(this);
-        }
+        gestorEstados.aplicarInicioTurno(this);
     }
 
     public boolean puedeAtacar() {
-        for (int i = 0; i < estadosAlterados.size(); i++) {
-            EstadoAlterado estado = estadosAlterados.get(i);
-
-            if (estado.permiteAtacar() == false) {
-                return false;
-            }
-        }
-
-        return true;
+        return gestorEstados.permiteAtacar();
     }
 
     public int obtenerAtaqueConEstados(int ataqueBase) {
-        int ataqueFinal = ataqueBase;
-
-        for (int i = 0; i < estadosAlterados.size(); i++) {
-            EstadoAlterado estado = estadosAlterados.get(i);
-            ataqueFinal = estado.modificarAtaque(ataqueFinal);
-        }
-
-        return ataqueFinal;
+        return gestorEstados.modificarAtaque(ataqueBase);
     }
 
     public void actualizarEstadosAlterados() {
-        ArrayList<EstadoAlterado> estadosActivos = new ArrayList<EstadoAlterado>();
-
-        for (int i = 0; i < estadosAlterados.size(); i++) {
-            EstadoAlterado estado = estadosAlterados.get(i);
-
-            estado.reducirDuracion();
-
-            if (estado.estaActivo()) {
-                estadosActivos.add(estado);
-            } else {
-                System.out.println(nombre + " ya no tiene el estado: " + estado.getNombre());
-            }
-        }
-
-        estadosAlterados = estadosActivos;
+        gestorEstados.actualizarEstados(nombre);
     }
 
     public int getNivel() {
@@ -223,7 +194,7 @@ public abstract class Personaje {
         return "Nombre: " + nombre
                 + "\nVida: " + vida
                 + "\nNivel: " + nivel
-		+ "\nEnergia: " + energia
+                + "\nEnergia: " + energia
                 + "\nCooldown: " + cooldown
                 + "\nArma equipada: " + arma
                 + "\nArmadura equipada: " + armadura;
